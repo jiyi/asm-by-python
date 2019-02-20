@@ -1,0 +1,4 @@
+* asm-by-python
+** 使用
+1. 修改 asm中的用户名、密码、ip、mac、hostname
+2. ~python3 asm.py~
