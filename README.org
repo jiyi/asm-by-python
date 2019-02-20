@@ -2,3 +2,7 @@
 ** 使用
 1. 修改 asm中的用户名、密码、ip、mac、hostname
 2. ~python3 asm.py~
+
+** TODO 设置cookie
+** TODO 检测ip与mac
+** TODO 图形界面
