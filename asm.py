@@ -1,14 +1,17 @@
 import requests
-# import urllib
 import base64
 import time
+import configparser
 
-hostname='http://172.20.2.115'
-username = ''
-password = ''
+cfg = configparser.ConfigParser()
+cfg.read('config.ini')
+
+hostname = cfg.get('user', 'hostname')
+username = cfg.get('user', 'username')
+password = cfg.get('user', 'password')
 # deviceId = '70378'
-ip = ''
-mac = ''
+ip = cfg.get('user', 'ip')
+mac = cfg.get('user', 'mac')
 
 def str_base64(string):
   return bytes.decode(base64.b64encode(str.encode(string)))
@@ -29,10 +32,6 @@ def create_dev_xml(ip, mac):
   dev_xml.append(mac)
   dev_xml.append(r'</Mac><IeVersion>Safari</IeVersion><Mark>255.255.255.0</Mark><GateWay></GateWay><DiskId>49C8BE1C7BC45BE9A4846F61AD9D7CEA</DiskId></MSAC>')
   return ''.join(dev_xml)
-
-# dev_xml = create_dev_xml(ip, mac)
-# dev_xml = urllib.parse.quote(dev_xml, safe='')
-# print(dev_xml)
 
 getDeviceInfo = {
   'tradecode': 'getdeviceinfoprocess',
@@ -62,32 +61,12 @@ def get_netAuth(deviceId):
   'is_mobile': '1'
 }
 
-# netAuth = {
-#   'tradecode': 'net_auth',
-#   'type': 'User',
-#   'user_name': str_base64(username),
-#   'password': str_base64(password),
-#   'deviceid': get_deviceId(),
-#   'is_mobile': '1'
-# }
-
-# keepMacAlive = requests.get(hostname + '/KeepMacAlive.html', params={'deviceid': deviceId})
-# r = requests.get(hostname + '/a/ajax.php', params = getDeviceInfo)
-# r = requests.get(hostname + '/a/ajax.php', params = netAuth)
-# print(str_dict(r.text)['DeviceID'])
-
-# print(get_netAuth())
-# deviceId = 2
-# print(get_netAuth())
-
 while True:
   checkStatus = requests.get(hostname + '/a/ajax.php', params = getDeviceInfo)
   deviceId = str_dict(checkStatus.text)['DeviceID']
   longin = requests.get(hostname + '/a/ajax.php', params = get_netAuth(deviceId))
   print(longin.text)
-
-  # time.sleep(60)
-
+  time.sleep(60)
   newDeviceId = deviceId
   while newDeviceId == deviceId:
     keepMacAlive = requests.get(hostname + '/KeepMacAlive.html', params={'deviceid': deviceId})
