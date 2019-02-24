@@ -29,7 +29,7 @@ def str_dict(string):
 # 创建xml字符串用于提交查询信息
 def create_dev_xml(ip, mac):
   dev_xml = []
-  dev_xml.append(r'<?xml version="1.0" encoding="gb2312"?><MSAC><DeviceName>MSHOME\jiy</DeviceName><OS>MACVersion 10.14.3 (Build 18D109)</OS><Ip>')
+  dev_xml.append(r'<?xml version="1.0" encoding="gb2312"?><MSAC><DeviceName>python</DeviceName><OS>MACVersion 10.14.3 (Build 18D109)</OS><Ip>')
   dev_xml.append(ip)
   dev_xml.append(r'</Ip><Mac>')
   dev_xml.append(mac)
@@ -64,15 +64,20 @@ def get_netAuth(deviceId):
 }
 
 while True:
-  checkStatus = requests.get(hostname + '/a/ajax.php', params = getDeviceInfo)
+  session = requests.Session()
+  checkStatus = session.get(hostname + '/a/ajax.php', params = getDeviceInfo)
+  cookie = checkStatus.cookies['PHPSESSID']
   deviceId = str_dict(checkStatus.text)['DeviceID']
-  longin = requests.get(hostname + '/a/ajax.php', params = get_netAuth(deviceId))
-  print(longin.text)
-  time.sleep(60)
+  print('[checkStatus] cookie=' + cookie + '; deviceId=' + deviceId)
+  login = session.get(hostname + '/a/ajax.php', params = get_netAuth(deviceId))
+
   newDeviceId = deviceId
+  counter = 0
   while newDeviceId == deviceId:
-    keepMacAlive = requests.get(hostname + '/KeepMacAlive.html', params={'deviceid': deviceId})
-    print(keepMacAlive.text)
-    checkStatus = requests.get(hostname + '/a/ajax.php', params = getDeviceInfo)
-    newDeviceId = str_dict(checkStatus.text)['DeviceID']
     time.sleep(30)
+    checkStatus = session.get(hostname + '/a/ajax.php', params = getDeviceInfo)
+    keepMacAlive = session.get(hostname + ':37527/KeepMacAlive.html', params={'deviceid': deviceId})
+    
+    newDeviceId = str_dict(checkStatus.text)['DeviceID']
+    print('device id: ' + str(newDeviceId) + ' counter=' + str(counter))
+    counter += 1
