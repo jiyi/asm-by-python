@@ -3,6 +3,7 @@
 1. 修改=config.ini=中的用户名、密码、ip、mac、hostname
 2. ~python3 asm.py~
 
-** TODO 设置cookie
+** DONE 设置cookie
+使用session，保障了cookie与keep-alive的使用
 ** TODO 检测ip与mac
 ** TODO 图形界面
