@@ -79,5 +79,5 @@ while True:
     keepMacAlive = session.get(hostname + ':37527/KeepMacAlive.html', params={'deviceid': deviceId})
     
     newDeviceId = str_dict(checkStatus.text)['DeviceID']
-    print('device id: ' + str(newDeviceId) + ' counter=' + str(counter))
+    print('keep alive=' + str(keepMacAlive.text) + ' device id: ' + str(newDeviceId) + ' counter=' + str(counter))
     counter += 1
