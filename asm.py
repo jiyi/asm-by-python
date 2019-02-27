@@ -23,8 +23,12 @@ def str_dict(string):
   def parseInt(num):
     return int(num)
 
-  sdict = string[string.index(r'{'):]
-  return eval(sdict)
+  try:
+    sdict = string[string.index(r'{'):]
+  except ValueError:
+    return { 'DeviceID': -1 }
+  else:
+    return eval(sdict)
 
 # 创建xml字符串用于提交查询信息
 def create_dev_xml(ip, mac):
@@ -77,7 +81,10 @@ while True:
     time.sleep(30)
     checkStatus = session.get(hostname + '/a/ajax.php', params = getDeviceInfo)
     keepMacAlive = session.get(hostname + ':37527/KeepMacAlive.html', params={'deviceid': deviceId})
-    
     newDeviceId = str_dict(checkStatus.text)['DeviceID']
+    if newDeviceId == -1:
+      print(checkStatus.text)
+      break 
+
     print('keep alive=' + str(keepMacAlive.text) + ' device id: ' + str(newDeviceId) + ' counter=' + str(counter))
     counter += 1
