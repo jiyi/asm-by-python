@@ -85,6 +85,7 @@ while True:
     if newDeviceId == -1:
       print(checkStatus.text)
       break 
-
-    print('keep alive=' + str(keepMacAlive.text) + ' device id: ' + str(newDeviceId) + ' counter=' + str(counter))
+    
+    msg = u'\rkeep alive=' + str(keepMacAlive.text) + ' device id: ' + str(newDeviceId) + ' counter=' + str(counter)
+    print(msg, end="")
     counter += 1
